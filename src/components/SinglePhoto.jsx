@@ -6,6 +6,13 @@ export default class SinglePhoto extends Component {
   }
 
   render() {
-    return <div />;
+    return (
+      <div>
+        <img
+          src={"data:image/png;base64, " + this.props.selectedPhoto}
+          alt=""
+        />
+      </div>
+    );
   }
 }
