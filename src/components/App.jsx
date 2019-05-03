@@ -1,37 +1,22 @@
 import React, { Component } from "react";
+
 import "../styles/styles.css";
 
 import Navbar from "./Navbar";
 import SinglePhoto from "./SinglePhoto";
 import Upload from "./Upload";
 import AllPhotos from "./AllPhotos";
+import { connect } from "react-redux";
 
 import { getSingleObject, listObjects } from "../utils";
 
-export default class App extends Component {
+class App extends Component {
   constructor(props) {
     super(props);
-    this.arr = [];
-    this.state = {
-      currentView: "",
-      photos: [],
-      selectedPhoto: ""
-    };
   }
 
   componentDidMount() {
-    listObjects()
-      .then(result => {
-        result.forEach(element => {
-          getSingleObject(element.Key).then(obj => {
-            this.arr.push(obj);
-            this.setState({ photos: this.arr });
-          });
-        });
-      })
-      .then(end => {
-        this.setState({ currentView: "AllPhotos" });
-      });
+    this.props.loadPhotos();
   }
 
   setSinglePhoto = base64 => {
@@ -64,19 +49,43 @@ export default class App extends Component {
     return (
       <div className="app">
         <Navbar currentView={this.setAllPhoto} setUpload={this.setUpload} />
-        {this.state.currentView === "SinglePhoto" && (
-          <SinglePhoto selectedPhoto={this.state.selectedPhoto} />
+        {this.props.currentView === "SinglePhoto" && (
+          <SinglePhoto selectedPhoto={this.props.selectedPhoto} />
         )}
-        {this.state.currentView === "Upload" && (
+        {this.props.currentView === "Upload" && (
           <Upload uploadPhoto={this.uploadPhoto} />
         )}
-        {this.state.currentView === "AllPhotos" && (
+        {this.props.currentView === "AllPhotos" && (
           <AllPhotos
             currentView={this.setSinglePhoto}
-            photos={this.state.photos}
+            photos={this.props.photos}
           />
         )}
       </div>
     );
   }
 }
+
+const mapDispatchToProps = dispatch => {
+  return {
+    loadPhotos: () =>
+      dispatch({
+        type: "LOAD_PHOTOS"
+      })
+  };
+};
+
+const mapStateToProps = state => {
+  return {
+    currentView: state.currentView,
+    photos: state.photos,
+    selectedPhoto: state.selectedPhoto
+  };
+};
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App);
+
+//export { result, App };
