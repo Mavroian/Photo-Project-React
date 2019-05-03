@@ -15,8 +15,8 @@ class App extends Component {
     super(props);
   }
 
-  componentDidMount() {
-    this.props.loadPhotos();
+  componentWillMount() {
+    console.log(this.props.loadPhotos());
   }
 
   setSinglePhoto = base64 => {

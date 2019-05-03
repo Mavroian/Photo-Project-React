@@ -15,24 +15,26 @@ const reducer = (state = initialState, action) => {
   switch (action.type) {
     case "LOAD_PHOTOS": {
       let arr = [];
-      let newState = state;
-      listObjects().then(result => {
-        result.forEach(element => {
-          getSingleObject(element.Key).then(obj => {
-            arr.push(obj);
+      listObjects()
+        .then(result => {
+          result.forEach(element => {
+            getSingleObject(element.Key).then(obj => {
+              arr.push(obj);
+            });
           });
+        })
+        .then(() => {
+          state.photos = arr;
+          state.currentView = "AllPhotos";
+          return state;
         });
-      });
-      newState.photos = arr;
-      return newState;
     }
     default: {
-      break;
+      return state;
     }
   }
 };
 const store = createStore(reducer, initialState);
-
 ReactDOM.render(
   <Provider store={store}>
     <App />
