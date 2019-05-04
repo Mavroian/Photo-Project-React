@@ -2,39 +2,19 @@ import React from "react";
 import ReactDOM from "react-dom";
 import App from "./components/App.jsx";
 import { Provider } from "react-redux";
-import { createStore } from "redux";
-import { getSingleObject, listObjects } from "./utils";
+import { createStore, applyMiddleware } from "redux";
+import thunk from "redux-thunk";
+import rootReducer from "./reducers";
 
-const initialState = {
-  currentView: "",
-  photos: [],
-  selectedPhoto: ""
-};
+const intialState = {};
+const middleware = [thunk];
 
-const reducer = (state = initialState, action) => {
-  switch (action.type) {
-    case "LOAD_PHOTOS": {
-      let arr = [];
-      listObjects()
-        .then(result => {
-          result.forEach(element => {
-            getSingleObject(element.Key).then(obj => {
-              arr.push(obj);
-            });
-          });
-        })
-        .then(() => {
-          state.photos = arr;
-          state.currentView = "AllPhotos";
-          return state;
-        });
-    }
-    default: {
-      return state;
-    }
-  }
-};
-const store = createStore(reducer, initialState);
+const store = createStore(
+  rootReducer,
+  intialState,
+  applyMiddleware(...middleware)
+);
+
 ReactDOM.render(
   <Provider store={store}>
     <App />

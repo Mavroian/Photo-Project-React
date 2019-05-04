@@ -1,10 +1,6 @@
 import React, { Component } from "react";
-
-export default class SinglePhoto extends Component {
-  constructor(props) {
-    super(props);
-  }
-
+import { connect } from "react-redux";
+class SinglePhoto extends Component {
   render() {
     return (
       <div>
@@ -16,3 +12,10 @@ export default class SinglePhoto extends Component {
     );
   }
 }
+const mapStateToProps = state => ({
+  photos: state.photos.photos,
+  currentView: state.currentView.currentView,
+  selectedPhoto: state.selectedPhoto.selectedPhoto
+});
+
+export default connect(mapStateToProps)(SinglePhoto);

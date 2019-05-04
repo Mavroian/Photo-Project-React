@@ -1,8 +1,11 @@
 import React, { Component } from "react";
 import _ from "lodash";
 import "../styles/upload.css";
+import { uploadPhoto } from "../actions/uploadPhoto";
+import { connect } from "react-redux";
+import AllPhotos from "./AllPhotos";
 
-export default class Upload extends Component {
+class Upload extends Component {
   constructor(props) {
     super(props);
     this.file = null;
@@ -12,16 +15,16 @@ export default class Upload extends Component {
     };
 
     this.clickFileInput = () => {
-      // Focus the text input using the raw DOM API
       if (this.file) this.file.click();
     };
   }
+
   componentDidMount() {
-    // autofocus the input on mount
     this.clickFileInput();
   }
   onFormSubmit = event => {
-    this.props.uploadPhoto(event.target.files[0]);
+    const file = event.target.files[0];
+    this.props.uploadPhoto(file);
   };
 
   render() {
@@ -41,3 +44,8 @@ export default class Upload extends Component {
     );
   }
 }
+
+export default connect(
+  null,
+  { uploadPhoto }
+)(Upload);
